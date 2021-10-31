@@ -80,9 +80,7 @@ Now, these dependencies can be overridden in a variety of ways. It can be overri
 ```kotlin
 val commonApp = CommonApp()
 
-class LoggingCoffeeApp(
-    config: CommonConfig = CommonApp()
-) : CommonConfig by commonApp {
+class LoggingCoffeeApp : CommonConfig by commonApp {
     val maker = CoffeeMaker(this)
     
     override val pump = object : Pump {
