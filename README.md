@@ -4,7 +4,7 @@ There are now several Dependency Injection frameworks for Kotlin which utilize a
 
 However, Koin still processes dependencies at runtime. This means that when the wiring code runs, it will fail at runtime if all the dependencies have not been correctly wired up. Dagger is a compile-time framework, but it requires a compiler plugin. 
 
-Using Kotlin's delegate functionality and some simple patterns, it's possible to get clean code without the boilerplate of pure constructor injection, while still getting compile-time resolution, all in native Kotlin with no additional libraries or compiler support.
+Using Kotlin's delegate functionality and some simple patterns, it's possible to get clean code without the boilerplate of pure constructor injection, while still getting compile-time resolution, all in native Kotlin with no additional libraries or compiler support needed.
 
 ## Kotlin Delegates
 
@@ -50,8 +50,6 @@ class Thermosiphon(
 }
 ```
 
-Thermosiphon is interesting because it takes an implementation-specific configuration and also implements an interface. 
-
 ## Wiring
 
 The configurations are interfaces, so they can be composed into a single application class. The application class contains all the dependencies, and can be passed to the individual dependencies without the boilerplate of having to repeat the constructor arguments for each dependency. 
@@ -80,9 +78,11 @@ class CommonApp : CommonConfig {
 Now, these dependencies can be overridden in a variety of ways. It can be overridden by making a subclass of `CommonApp`, or by using delegation and overriding in the dependency root:
 
 ```kotlin
+val commonApp = CommonApp()
+
 class LoggingCoffeeApp(
     config: CommonConfig = CommonApp()
-) : CommonConfig by config {
+) : CommonConfig by commonApp {
     val maker = CoffeeMaker(this)
     
     override val pump = object : Pump {
