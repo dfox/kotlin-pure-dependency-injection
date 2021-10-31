@@ -1,14 +1,16 @@
 # Kotlin Pure Compile Time Dependency Injection
 
-There are now several Dependency Injection frameworks for Kotlin which utilize a more functional approach with constructor injection, such as Koin, Dagger, and others. These frameworks provide very flexible, non-invasive dependency injection. They also have very clean APIs utilizing the DSL features of Kotlin. However, they still process dependencies at runtime. This means that when the wiring code runs, it will fail at runtime if all the dependencies have not been correctly wired up. 
+There are now several Dependency Injection frameworks for Kotlin which utilize a more functional approach with constructor injection, such as [Koin](https://insert-koin.io), [Dagger](https://dagger.dev), and others. These frameworks provide very flexible, non-invasive dependency injection. They also have very clean APIs utilizing the DSL features of Kotlin. 
 
-Using Kotlin's delegate functionality and some simple patterns, it's possible to get just as clean code without the boilerplate of pure constructor injection, while still getting compile-time resolution, all in native Kotlin with no additional libraries.
+However, Koin still processes dependencies at runtime. This means that when the wiring code runs, it will fail at runtime if all the dependencies have not been correctly wired up. Dagger is a compile-time framework, but it requires a compiler plugin. 
+
+Using Kotlin's delegate functionality and some simple patterns, it's possible to get clean code without the boilerplate of pure constructor injection, while still getting compile-time resolution, all in native Kotlin with no additional libraries or compiler support.
 
 ## Kotlin Delegates
 
 The key to this pattern is Kotlin's delegate functionality. Like Java, Kotlin does not have multiple inheritance. It does allow classes to implement multiple interfaces, and by using delegation, it can get much of the same functionality. 
 
-Using Koin's CoffeeMaker example, create a `CoffeeMaker` class which takes, as a single argument, a `CoffeeMakerConfig`. The `CoffeeMakerConfig` interface describes the dependencies which `CoffeeMaker` requires. `CoffeeMaker` also implements this interface by delegating to the constructor argument, allowing the dependencies to be accessed as properties directly. This makes the pattern as clean as constructor injection, as there is no extra code. 
+Using Koin's CoffeeMaker example, create a `CoffeeMaker` class which takes, as a single argument, a `CoffeeMakerConfig`. The `CoffeeMakerConfig` interface describes the dependencies which `CoffeeMaker` requires. `CoffeeMaker` also implements this interface by delegating to the constructor argument, allowing the dependencies to be accessed as properties directly. This makes the pattern as clean as constructor injection.
 
 ```kotlin
 interface CoffeeMakerConfig {
@@ -37,7 +39,7 @@ interface ThermosiphonConfig {
 }
 
 class Thermosiphon(
-    private val config: ThermosiphonConfig
+    config: ThermosiphonConfig
 ) : ThermosiphonConfig by config, Pump {
 
     override fun pump() {
@@ -79,8 +81,8 @@ Now, these dependencies can be overridden in a variety of ways. It can be overri
 
 ```kotlin
 class LoggingCoffeeApp(
-    val commonApp: CommonConfig = CommonApp()
-) : CommonConfig by commonApp {
+    config: CommonConfig = CommonApp()
+) : CommonConfig by config {
     val maker = CoffeeMaker(this)
     
     override val pump = object : Pump {

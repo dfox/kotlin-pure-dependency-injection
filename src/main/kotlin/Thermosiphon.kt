@@ -4,7 +4,7 @@ interface ThermosiphonConfig {
 }
 
 class Thermosiphon(
-    private val config: ThermosiphonConfig
+    config: ThermosiphonConfig
 ) : ThermosiphonConfig by config, Pump {
 
     override fun pump() {
