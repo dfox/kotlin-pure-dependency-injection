@@ -93,8 +93,6 @@ class LoggingCoffeeApp : CommonConfig by commonApp {
 }
 ```
 
-It is also possible to save a `CommonApp` instance in a variable and delegate to that from multiple graphs. 
-
 ## Singletons vs Factories
 
 Because we are using simple Kotlin code, factories and singletons are simply defined using variables and functions. So there is no need for additional code to abstract them. 
