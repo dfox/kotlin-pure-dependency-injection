@@ -1,0 +1,3 @@
+interface Pump {
+    fun pump()
+}
